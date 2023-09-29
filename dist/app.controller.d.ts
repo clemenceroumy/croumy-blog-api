@@ -2,5 +2,5 @@ import { AppService } from './app.service';
 export declare class AppController {
     private readonly appService;
     constructor(appService: AppService);
-    webhookInstagram(request: Request): string;
+    webhookInstagram(challenge: String, token: String): string;
 }
