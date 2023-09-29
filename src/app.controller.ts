@@ -9,6 +9,6 @@ export class AppController {
   webhookInstagram(@Query('hub.challenge') challenge: String, @Query("hub.verify_token") token: String): string {
     console.log(challenge);
     console.log(token);
-    return
+    return "ok"
   }
 }
