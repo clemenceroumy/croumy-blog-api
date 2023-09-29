@@ -19,17 +19,19 @@ let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
     }
-    webhookInstagram(request) {
-        print(request);
-        return;
+    webhookInstagram(challenge, token) {
+        console.log(challenge);
+        console.log(token);
+        return "ok";
     }
 };
 exports.AppController = AppController;
 __decorate([
     (0, common_1.Get)("/instagram-webhook"),
-    __param(0, (0, common_1.Req)()),
+    __param(0, (0, common_1.Query)('hub.challenge')),
+    __param(1, (0, common_1.Query)("hub.verify_token")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", String)
 ], AppController.prototype, "webhookInstagram", null);
 exports.AppController = AppController = __decorate([
