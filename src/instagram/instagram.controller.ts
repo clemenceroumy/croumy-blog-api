@@ -1,10 +1,9 @@
 import {Controller, Get} from '@nestjs/common';
 import {HttpService} from "@nestjs/axios";
-import {firstValueFrom} from "rxjs";
-import InstagramResponse from "./models/InstagramResponse";
 import {ConfigService} from "@nestjs/config";
 import {StorageService} from "../storage/storage.service";
 import {InstagramService} from "./instagram.service";
+import {Cron} from "@nestjs/schedule";
 
 @Controller('instagram')
 export class InstagramController {
@@ -15,8 +14,7 @@ export class InstagramController {
         private storageService: StorageService
     ) {}
 
-    //@Cron('TZ=Europe/Paris 0 17 * * *')
-    @Get('/')
+    @Cron("0 17 * * *",{timeZone: 'Europe/Paris'})
     async uploadToStorage() {
         const data = await this.instagramService.getInstagramPictures("");
 
