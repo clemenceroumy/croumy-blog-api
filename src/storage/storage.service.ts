@@ -1,35 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 import {getStorage} from "firebase-admin/storage";
 import * as fs from "fs";
 import {HttpService} from "@nestjs/axios";
 
 @Injectable()
 export class StorageService {
-    bucket() { return getStorage().bucket() };
+    bucket() {
+        return getStorage().bucket()
+    };
 
-    constructor(private httpService: HttpService) {}
-
-    async downloadImageFromUrl(url: string, fileName: string) {
-        const writer = fs.createWriteStream(fileName);
-
-        const response = await this.httpService.axiosRef({
-            url: url,
-            method: 'GET',
-            responseType: 'stream',
-        });
-
-        response.data.pipe(writer);
-
-        writer.close()
+    constructor(private httpService: HttpService) {
     }
 
-    async uploadFile(file: Express.Multer.File, destination: string) {
-        await this.bucket().upload(`instagram/${file.path}`, {
-            destination: destination,
-            metadata: {
-                contentType: file.mimetype,
-            }
-        })
+    async uploadFileFromUrl(url: string, destinationPath: string): Promise<void> {
+        const response = await this.httpService.axiosRef(url, {responseType: 'stream'});
+
+        const file = this.bucket().file(destinationPath);
+
+        await new Promise<void>((resolve, reject) => {
+            response.data
+                .pipe(file.createWriteStream())
+                .on('error', reject)
+                .on('finish', resolve);
+        });
     }
 
     async getAllFiles(path: string) {

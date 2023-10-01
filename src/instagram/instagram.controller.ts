@@ -20,19 +20,22 @@ export class InstagramController {
     async uploadToStorage() {
         const data = await this.instagramService.getInstagramPictures("");
 
-        let storageFiles= await this.storageService.getAllFiles('instagram/');
-        let instagramFiles= data.data.user.edge_owner_to_timeline_media.edges;
+        let storageFiles = await this.storageService.getAllFiles('instagram/');
+        let instagramFiles = data.data.user.edge_owner_to_timeline_media.edges;
 
-        let uploadedStorageNumber= storageFiles.length;
-        let instagramNumber= data.data.user.edge_owner_to_timeline_media.count;
+        let uploadedStorageNumber = storageFiles.length;
+        let instagramNumber = data.data.user.edge_owner_to_timeline_media.count;
 
-        if(uploadedStorageNumber < instagramNumber) {
+        if (uploadedStorageNumber < instagramNumber) {
             let filesToUpload = instagramFiles.filter(instaFile =>
                 storageFiles.some(storageFile => storageFile.name.includes(instaFile.node.id)) === false
             );
             console.log(`${filesToUpload.length} new posts detected : ${filesToUpload.map(file => file.node.id).join('\n')}`);
-        } else {
-            console.log('Up to date, all post are already uploaded')
-        }
+
+            // UPLOAD FILES TO STORAGE
+            await Promise.all(filesToUpload.map(file => {
+                this.storageService.uploadFileFromUrl(file.node.display_url, `instagram/${file.node.fileName}`)
+            }));
+        } else console.log('Up to date, all post are already uploaded')
     }
 }

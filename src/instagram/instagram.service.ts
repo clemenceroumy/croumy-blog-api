@@ -37,6 +37,6 @@ export class InstagramService {
         } while (response.data.user.edge_owner_to_timeline_media.page_info.has_next_page === true && !noNeedToContinue)
 
 
-        return response
+        return new InstagramResponse(response)
     }
 }
