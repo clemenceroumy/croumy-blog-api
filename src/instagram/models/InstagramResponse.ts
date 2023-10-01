@@ -58,12 +58,14 @@ class Node {
         this.taken_at_timestamp = copy.taken_at_timestamp;
         this.display_url = copy.display_url;
         this.edge_media_preview_like = copy.edge_media_preview_like;
+        this.shortcode = copy.shortcode;
     }
 
     id: string;
     taken_at_timestamp: number;
     display_url: string = '';
     edge_media_preview_like: { count: number } = {count: 0};
+    shortcode: string = '';
 
     get fileName(): string {
         return `${this.id}-${this.taken_at_timestamp}.jpg`

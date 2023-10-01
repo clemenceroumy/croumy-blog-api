@@ -12,7 +12,8 @@ export class InstagramController {
         private instagramService: InstagramService,
         private configService: ConfigService,
         private storageService: StorageService
-    ) {}
+    ) {
+    }
 
     @Cron("0 17 * * *",{timeZone: 'Europe/Paris'})
     async uploadToStorage() {
@@ -32,8 +33,29 @@ export class InstagramController {
 
             // UPLOAD FILES TO STORAGE
             await Promise.all(filesToUpload.map(file => {
-                this.storageService.uploadFileFromUrl(file.node.display_url, `instagram/${file.node.fileName}`)
+                this.storageService.uploadFileFromUrl(
+                    file.node.display_url,
+                    `instagram/${file.node.fileName}`,
+                    {
+                        shortcode: file.node.shortcode,
+                        likes: file.node.edge_media_preview_like.count,
+                    }
+                )
             }));
-        } else console.log('Up to date, all post are already uploaded')
+            console.log('Files uploaded !')
+        } else {
+            console.log('Up to date, updating metadata...');
+            await Promise.all(storageFiles.map(async file => {
+                const instaFile = instagramFiles.find(instaFile => instaFile.node.id === file.name.split('/')[1].split('-')[0]);
+
+                await file.setMetadata({
+                    metadata: {
+                        shortcode: instaFile.node.shortcode,
+                        likes: instaFile.node.edge_media_preview_like.count,
+                    }
+                });
+            }));
+            console.log('Metadata updated !')
+        }
     }
 }

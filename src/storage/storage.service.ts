@@ -12,10 +12,10 @@ export class StorageService {
     constructor(private httpService: HttpService) {
     }
 
-    async uploadFileFromUrl(url: string, destinationPath: string): Promise<void> {
+    async uploadFileFromUrl(url: string, destinationPath: string, metadata: {} = {}): Promise<void> {
         const response = await this.httpService.axiosRef(url, {responseType: 'stream'});
 
-        const file = this.bucket().file(destinationPath);
+        const file = this.bucket().file(destinationPath, metadata);
 
         await new Promise<void>((resolve, reject) => {
             response.data
