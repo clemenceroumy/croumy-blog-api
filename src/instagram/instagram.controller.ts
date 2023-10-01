@@ -37,8 +37,10 @@ export class InstagramController {
                     file.node.display_url,
                     `instagram/${file.node.fileName}`,
                     {
-                        shortcode: file.node.shortcode,
-                        likes: file.node.edge_media_preview_like.count,
+                        metadata: {
+                            shortcode: file.node.shortcode,
+                            likes: file.node.edge_media_preview_like.count
+                        }
                     }
                 )
             }));
