@@ -1,6 +1,4 @@
 import {Controller, Get} from '@nestjs/common';
-import {HttpService} from "@nestjs/axios";
-import {ConfigService} from "@nestjs/config";
 import {StorageService} from "../storage/storage.service";
 import {InstagramService} from "./instagram.service";
 import {Cron} from "@nestjs/schedule";
@@ -8,9 +6,7 @@ import {Cron} from "@nestjs/schedule";
 @Controller('instagram')
 export class InstagramController {
     constructor(
-        private httpService: HttpService,
         private instagramService: InstagramService,
-        private configService: ConfigService,
         private storageService: StorageService
     ) {
     }
