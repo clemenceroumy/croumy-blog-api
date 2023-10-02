@@ -11,9 +11,10 @@ export class InstagramController {
     ) {
     }
 
-    @Cron("0 17 * * *",{timeZone: 'Europe/Paris'})
+    @Cron("0 0 17 * * *",{timeZone: 'Europe/Paris'})
     async uploadToStorage() {
         const data = await this.instagramService.getInstagramPictures("");
+        if(data === null) return console.error('Error while fetching instagram data');
 
         let storageFiles = await this.storageService.getAllFiles('instagram/');
         let instagramFiles = data.data.user.edge_owner_to_timeline_media.edges;
