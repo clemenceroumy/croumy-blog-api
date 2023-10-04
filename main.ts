@@ -4,7 +4,10 @@ import {cert, initializeApp} from 'firebase-admin/app';
 import {ConfigService} from "@nestjs/config";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: false });
+  const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: '*',
+  })
   const appConfig = app.get(ConfigService);
 
   const firebaseServiceAccount = appConfig.get('firebase.service_account');
