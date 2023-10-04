@@ -11,10 +11,10 @@ export class InstagramController {
     ) {
     }
 
-    @Cron("0 0 17 * * *",{timeZone: 'Europe/Paris'})
+    @Cron("0 0 17 * * *", {timeZone: 'Europe/Paris'})
     async uploadToStorage() {
         const data = await this.instagramService.getInstagramPictures("");
-        if(data === null) return console.error('Error while fetching instagram data');
+        if (data === null) return console.error('Error while fetching instagram data');
 
         let storageFiles = await this.storageService.getAllFiles('instagram/');
         let instagramFiles = data.data.user.edge_owner_to_timeline_media.edges;
@@ -22,6 +22,7 @@ export class InstagramController {
         let uploadedStorageNumber = storageFiles.length;
         let instagramNumber = data.data.user.edge_owner_to_timeline_media.count;
 
+        // UPLOAD NEW POSTS IF ANY
         if (uploadedStorageNumber < instagramNumber) {
             let filesToUpload = instagramFiles.filter(instaFile =>
                 storageFiles.some(storageFile => storageFile.name.includes(instaFile.node.id)) === false
@@ -43,18 +44,21 @@ export class InstagramController {
             }));
             console.log('Files uploaded !')
         } else {
-            console.log('Up to date, updating metadata...');
-            await Promise.all(storageFiles.map(async file => {
-                const instaFile = instagramFiles.find(instaFile => instaFile.node.id === file.name.split('/')[1].split('-')[0]);
-
-                await file.setMetadata({
-                    metadata: {
-                        shortcode: instaFile.node.shortcode,
-                        likes: instaFile.node.edge_media_preview_like.count,
-                    }
-                });
-            }));
-            console.log('Metadata updated !')
+            console.log('Up to date, no new posts detected !')
         }
+
+        // UPDATE ALREADY UPLOADED FILES METADATA
+        console.log('Updating metadata...');
+        await Promise.all(storageFiles.map(async file => {
+            const instaFile = instagramFiles.find(instaFile => instaFile.node.id === file.name.split('/')[1].split('-')[0]);
+
+            await file.setMetadata({
+                metadata: {
+                    shortcode: instaFile.node.shortcode,
+                    likes: instaFile.node.edge_media_preview_like.count,
+                }
+            });
+        }));
+        console.log('Metadata updated !')
     }
 }

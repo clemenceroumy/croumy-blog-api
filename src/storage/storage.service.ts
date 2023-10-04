@@ -23,6 +23,8 @@ export class StorageService {
                 .on('error', reject)
                 .on('finish', resolve);
         });
+
+        await file.setMetadata(metadata);
     }
 
     async getAllFiles(path: string) {
