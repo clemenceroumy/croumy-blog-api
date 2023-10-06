@@ -6,6 +6,8 @@ import {InstagramModule} from "./instagram/instagram.module";
 import {ConfigModule} from "@nestjs/config";
 import config from 'config';
 import {HltbModule} from "./hltb/hltb.module";
+import { SpotifyController } from './spotify/spotify.controller';
+import {SpotifyModule} from "./spotify/spotify.module";
 
 @Module({
     imports: [
@@ -17,10 +19,10 @@ import {HltbModule} from "./hltb/hltb.module";
         ),
         ScheduleModule.forRoot(),
         InstagramModule,
-        HltbModule
+        HltbModule,
+        SpotifyModule
     ],
     controllers: [AppController],
     providers: [AppService],
 })
-export class AppModule {
-}
+export class AppModule {}

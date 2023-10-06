@@ -6,5 +6,9 @@ export default () => ({
     },
     hltb: {
         userId: String(process.env.HLTB_USER_ID)
+    },
+    spotify: {
+        clientId: String(process.env.SPOTIFY_CLIENT_ID),
+        clientSecret: String(process.env.SPOTIFY_CLIENT_SECRET),
     }
 })
