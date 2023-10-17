@@ -8,6 +8,7 @@ import config from 'config';
 import {HltbModule} from "./hltb/hltb.module";
 import { SpotifyController } from './spotify/spotify.controller';
 import {SpotifyModule} from "./spotify/spotify.module";
+import {NotionModule} from "./notion/notion.module";
 
 @Module({
     imports: [
@@ -20,7 +21,8 @@ import {SpotifyModule} from "./spotify/spotify.module";
         ScheduleModule.forRoot(),
         InstagramModule,
         HltbModule,
-        SpotifyModule
+        SpotifyModule,
+        NotionModule
     ],
     controllers: [AppController],
     providers: [AppService],
