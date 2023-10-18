@@ -14,4 +14,5 @@ export class MangaDatabaseProperties {
     completed: {select: {name: string}};
     auteurs: {multi_select: {name: string}[]};
     nom: {title: {text: {content: string}}[]};
+    status: {select: {id: string}};
 }
